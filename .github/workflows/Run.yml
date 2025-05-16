@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         bot_id: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-      max-parallel: 1  # Controla cuántos bots se ejecutan a la vez (ajústalo según lo que necesites)
+      max-parallel: 5  # Cámbialo a 20 si quieres que vayan todos al mismo tiempo
 
     steps:
       - name: Checkout repo
