@@ -9,7 +9,7 @@ def view_bot(bot_id):
     driver = None
     try:
         driver = uc.Chrome(options=options)
-        driver.get("https://kick.com/TU_CANAL_AQUI")
+        driver.get("https://kick.com/elshowdelast")
         print(f"✅ Bot {bot_id} viendo Kick.com", flush=True)
         time.sleep(120)  # 2 minutos de duración
         print(f"🔵 Bot {bot_id} finalizó la visualización correctamente.", flush=True)
