@@ -6,26 +6,29 @@ KICK_URL = "https://kick.com/elshowdelast"
 VISIT_DURATION = 2 * 60  # 10 minutos
 NUM_BOTS = 20
 
-def view_bot(bot_id):
+def view_bot(bot_id: str):
+    print(f"🟢 Bot {bot_id} iniciando...")
+
+    options = Options()
+    options.headless = True
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+
     try:
-        options = uc.ChromeOptions()
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-        options.add_argument("--mute-audio")
-        options.add_argument("--headless=new")
-        options.add_argument("--disable-gpu")
-        options.add_argument("--window-size=1920,1080")
-
         driver = uc.Chrome(options=options)
-        driver.get(KICK_URL)
-        print(f"🟢 Bot {bot_id} viendo {KICK_URL}")
+        driver.get("https://kick.com/TU_CANAL_AQUI")
 
-        time.sleep(VISIT_DURATION)
-
-        driver.quit()
-        print(f"🔴 Bot {bot_id} terminó")
+        print(f"✅ Bot {bot_id} viendo el stream...")
+        time.sleep(120)  # 2 minutos
     except Exception as e:
         print(f"❌ Bot {bot_id} error: {e}")
+    finally:
+        driver.quit()
+        print(f"🔴 Bot {bot_id} finalizó.")
+
+if __name__ == "__main__":
+    bot_id = sys.argv[1] if len(sys.argv) > 1 else "1"
+    view_bot(bot_id)
 
 
 # Lanzar bots en paralelo
