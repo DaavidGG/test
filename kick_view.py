@@ -1,10 +1,7 @@
+import sys
 import time
-import threading
 import undetected_chromedriver as uc
-
-KICK_URL = "https://kick.com/elshowdelast"
-VISIT_DURATION = 2 * 60  # 10 minutos
-NUM_BOTS = 20
+from selenium.webdriver.chrome.options import Options
 
 def view_bot(bot_id: str):
     print(f"🟢 Bot {bot_id} iniciando...")
@@ -16,7 +13,7 @@ def view_bot(bot_id: str):
 
     try:
         driver = uc.Chrome(options=options)
-        driver.get("https://kick.com/TU_CANAL_AQUI")
+        driver.get("https://kick.com/TU_CANAL_AQUI")  # Cambia por tu canal real
 
         print(f"✅ Bot {bot_id} viendo el stream...")
         time.sleep(120)  # 2 minutos
@@ -27,18 +24,6 @@ def view_bot(bot_id: str):
         print(f"🔴 Bot {bot_id} finalizó.")
 
 if __name__ == "__main__":
+    import sys  # <--- Esta línea es esencial
     bot_id = sys.argv[1] if len(sys.argv) > 1 else "1"
     view_bot(bot_id)
-
-
-# Lanzar bots en paralelo
-threads = []
-for i in range(NUM_BOTS):
-    t = threading.Thread(target=view_bot, args=(i + 1,))
-    t.start()
-    threads.append(t)
-
-for t in threads:
-    t.join()
-
-print("✅ Todos los bots finalizaron")
