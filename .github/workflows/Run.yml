@@ -28,4 +28,4 @@ jobs:
 
     - name: Run bots script
       run: |
-        python kick_viewbot.py
+        python kick_view.py
