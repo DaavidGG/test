@@ -29,4 +29,8 @@ pip install --upgrade pip
 pip install selenium
 
 # Ejecutar el script Python con BOT_ID o 1 por defecto
-python kick_view.py ${BOT_ID:-100}
+for i in $(seq 1 100)
+do
+  python kick_view.py $i &
+done
+wait
