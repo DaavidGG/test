@@ -1,36 +1,44 @@
 #!/bin/bash
 
-set -e
-
-echo "📦 Instalando dependencias necesarias..."
+echo "📦 Instalando herramientas necesarias..."
 apt-get update
-apt-get install -y wget unzip curl fonts-liberation libnss3 libxss1 libxkbcommon0 \
-libatk-bridge2.0-0 libgtk-3-0 libdrm2 libgbm1 libxshmfence1
+apt-get install -y wget curl unzip gnupg ca-certificates fonts-liberation libnss3 libxss1 libxkbcommon0 libatk-bridge2.0-0 libgtk-3-0 libdrm2 libgbm1 libxshmfence1 libasound2
 
-echo "🌐 Descargando e instalando Google Chrome..."
+echo "🧹 Limpiando versiones previas..."
+rm -f google-chrome-stable_current_amd64.deb*
+
+echo "🌐 Descargando Google Chrome..."
 wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-apt-get install -y ./google-chrome-stable_current_amd64.deb
 
+echo "💾 Instalando Google Chrome..."
+apt-get install -y ./google-chrome-stable_current_amd64.deb || apt --fix-broken install -y
+
+# Verifica si Chrome quedó instalado
+if ! command -v google-chrome > /dev/null; then
+  echo "❌ Google Chrome no se instaló correctamente."
+  exit 1
+fi
+
+echo "🌍 Versión de Chrome:"
+google-chrome --version
+
+# ChromeDriver
 CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+')
-echo "🌐 Chrome versión instalada: $CHROME_VERSION"
-
-echo "🔧 Descargando ChromeDriver versión compatible..."
 CHROME_DRIVER_VERSION=$(wget -qO- https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION)
-wget https://chromedriver.storage.googleapis.com/${CHROME_DRIVER_VERSION}/chromedriver_linux64.zip
+
+echo "⬇️ Descargando ChromeDriver $CHROME_DRIVER_VERSION..."
+wget https://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip
 unzip chromedriver_linux64.zip
 mv chromedriver /usr/local/bin/chromedriver
 chmod +x /usr/local/bin/chromedriver
 rm chromedriver_linux64.zip
 
-echo "✅ ChromeDriver instalado correctamente."
+echo "✅ ChromeDriver instalado."
 
-echo "📦 Instalando dependencias de Python..."
-pip install -U pip
-pip install selenium
+echo "🐍 Instalando dependencias de Python..."
+pip install -U pip selenium
 
 echo "🚀 Iniciando bots..."
-
-# Cambia el número final para la cantidad de bots que deseas lanzar
 for i in $(seq 1 3); do
   echo "🟢 Iniciando Bot $i"
   python kick_view.py $i &
