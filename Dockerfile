@@ -32,9 +32,7 @@ RUN curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor
 # Instala Google Chrome estable
 RUN apt-get update && apt-get install -y google-chrome-stable && rm -rf /var/lib/apt/lists/*
 
-# Debug: mostrar la ruta de chrome instalada
-RUN which google-chrome
-
+ENV PATH="/usr/bin/google-chrome:${PATH}"
 # Instala Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
