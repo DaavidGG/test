@@ -39,8 +39,13 @@ RUN which google-chrome
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copia el código fuente
-COPY . /app
 WORKDIR /app
 
-CMD ["python", "kick_view.py","100"]
+COPY kick_view.py /app/kick_view.py
+COPY start_bots.sh /app/start_bots.sh
+
+# Instalar dependencias, Chrome, chromedriver, Python, pip, etc. aquí
+
+RUN chmod +x /app/start_bots.sh
+
+CMD ["/app/start_bots.sh"]
