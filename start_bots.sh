@@ -1,7 +1,7 @@
 #!/bin/bash
-for i in $(seq 1 10); do
-  echo "🟢 Iniciando Bot $i"
-  python kick_view.py $i &
+for i in {1..10}; do
+    python kick_view.py $i &
+    sleep 1
 done
 
 wait
