@@ -1,10 +1,9 @@
 FROM python:3.11-slim
 
-# Instala dependencias
+# Instala dependencias básicas
 RUN apt-get update && apt-get install -y \
     wget \
     curl \
-    unzip \
     gnupg \
     fonts-liberation \
     libnss3 \
@@ -23,22 +22,25 @@ RUN apt-get update && apt-get install -y \
     libxdamage1 \
     libxi6 \
     libxtst6 \
+    ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Descarga e instala Google Chrome
-RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
-    dpkg -i google-chrome-stable_current_amd64.deb || apt-get -fy install && \
-    rm google-chrome-stable_current_amd64.deb
+# Añade llave GPG de Google y repositorio de Chrome
+RUN curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-linux-signing-keyring.gpg && \
+    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-linux-signing-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
 
-# Instala dependencias de Python
+# Instala Google Chrome estable
+RUN apt-get update && apt-get install -y google-chrome-stable && rm -rf /var/lib/apt/lists/*
+
+# Debug: mostrar la ruta de chrome instalada
+RUN which google-chrome
+
+# Instala Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copia tu código
+# Copia el código fuente
 COPY . /app
 WORKDIR /app
-
-# Para debug: imprime la ruta de chrome
-RUN which google-chrome
 
 CMD ["python", "kick_view.py"]
