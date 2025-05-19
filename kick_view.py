@@ -9,7 +9,7 @@ def view_bot(bot_id):
     print(f"🟢 Bot {bot_id} iniciando...", flush=True)
     
     options = Options()
-    options.add_argument("--headless=new")  # modo headless actualizado
+    options.add_argument("--headless=new")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-gpu")
@@ -17,6 +17,10 @@ def view_bot(bot_id):
     options.add_argument("--disable-extensions")
     options.add_argument("--disable-software-rasterizer")
 
+    # Añade un user-data-dir único por bot para evitar conflicto
+    temp_dir = tempfile.mkdtemp(prefix=f"bot_{bot_id}_profile_")
+    options.add_argument(f"--user-data-dir={temp_dir}")
+    
     driver = None
     try:
         driver = webdriver.Chrome(options=options)
