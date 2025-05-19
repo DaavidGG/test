@@ -6,7 +6,7 @@ import shutil
 import os
 import traceback
 
-KICK_URL = "https://kick.com/elshowdelast"
+KICK_URL = "https://youtu.be/gSln4tG4TfQ?si=G8TPXj59pcGg_qyB"
 
 def view_bot(bot_id):
     print(f"🟢 Bot {bot_id} iniciando...", flush=True)
