@@ -22,13 +22,24 @@ apt-get update && apt-get install -y \
 
 echo "🌐 Descargando e instalando Google Chrome directamente..."
 curl -sSL -o chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-apt-get install -y ./chrome.deb || apt --fix-broken install -y
+dpkg -i chrome.deb || apt-get install -f -y
 rm chrome.deb
 
-echo "🌍 Chrome instalado: $(google-chrome --version)"
+# Verificar ubicación de Google Chrome
+CHROME_BIN="/usr/bin/google-chrome"
+if [ ! -x "$CHROME_BIN" ]; then
+  CHROME_BIN="/opt/google/chrome/google-chrome"
+fi
+
+if [ ! -x "$CHROME_BIN" ]; then
+  echo "❌ No se encontró ejecutable de Google Chrome."
+  exit 1
+fi
+
+echo "🌍 Chrome instalado: $($CHROME_BIN --version)"
 
 echo "⬇️ Instalando ChromeDriver correspondiente..."
-CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+')
+CHROME_VERSION=$($CHROME_BIN --version | grep -oP '\d+\.\d+\.\d+')
 CHROMEDRIVER_VERSION=$(curl -sS "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
 curl -sS -o chromedriver.zip https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip
 unzip chromedriver.zip
