@@ -1,49 +1,25 @@
 FROM python:3.11-slim
 
-# Instala dependencias básicas
+# Evita interacciones durante la instalación
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Instala Chrome
 RUN apt-get update && apt-get install -y \
-    wget \
-    curl \
-    gnupg \
-    fonts-liberation \
-    libnss3 \
-    libxss1 \
-    libxkbcommon0 \
-    libatk-bridge2.0-0 \
-    libgtk-3-0 \
-    libdrm2 \
-    libgbm1 \
-    libxshmfence1 \
-    libasound2 \
-    libx11-xcb1 \
-    libxcb-dri3-0 \
-    libxcb-xfixes0 \
-    libxcomposite1 \
-    libxdamage1 \
-    libxi6 \
-    libxtst6 \
-    ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+    wget unzip gnupg curl xvfb \
+    libglib2.0-0 libnss3 libgconf-2-4 libfontconfig1 libxss1 libappindicator1 libindicator7 libu2f-udev \
+    fonts-liberation libatk-bridge2.0-0 libgtk-3-0 libdrm-dev libxcomposite1 libxrandr2 libxdamage1 libxkbcommon0 \
+    --no-install-recommends && \
+    wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+    dpkg -i google-chrome-stable_current_amd64.deb || apt-get -f install -y && \
+    rm google-chrome-stable_current_amd64.deb && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Añade llave GPG de Google y repositorio de Chrome
-RUN curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-linux-signing-keyring.gpg && \
-    echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-linux-signing-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
-
-# Instala Google Chrome estable
-RUN apt-get update && apt-get install -y google-chrome-stable && rm -rf /var/lib/apt/lists/*
-
-ENV PATH="/usr/bin/google-chrome:${PATH}"
-# Instala Python dependencies
+# Instala pip y dependencias
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-WORKDIR /app
+# Copia el script
+COPY kick_view.py .
 
-COPY kick_view.py /app/kick_view.py
-COPY start_bots.sh /app/start_bots.sh
-
-# Instalar dependencias, Chrome, chromedriver, Python, pip, etc. aquí
-
-RUN chmod +x /app/start_bots.sh
-
-CMD ["/app/start_bots.sh"]
+# Lanza el bot
+CMD ["python", "kick_view.py"]
