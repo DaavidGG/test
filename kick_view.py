@@ -21,10 +21,10 @@ def view_bot(bot_id):
     # Añade un user-data-dir único por bot para evitar conflicto
     temp_dir = tempfile.mkdtemp(prefix=f"bot_{bot_id}_profile_")
     options.add_argument(f"--user-data-dir={temp_dir}")
-    
+    service = Service("/usr/local/bin/chromedriver")
     driver = None
     try:
-        driver = webdriver.Chrome(options=options)
+       driver = webdriver.Chrome(service=service, options=options)
         driver.get(KICK_URL)
         print(f"✅ Bot {bot_id} viendo {KICK_URL}", flush=True)
         time.sleep(120)  # 2 minutos
