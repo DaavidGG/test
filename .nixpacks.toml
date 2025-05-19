@@ -8,14 +8,18 @@ nixPkgs = [
 
 [phases.install]
 commands = [
+  # Usamos python3.11 explícito para crear venv
   "python3.11 -m venv /opt/venv",
-  ". /opt/venv/bin/activate",
-  "pip install --upgrade pip",
-  "pip install -r requirements.txt"
+
+  # Activamos e instalamos
+  ". /opt/venv/bin/activate && pip install --upgrade pip",
+
+  ". /opt/venv/bin/activate && pip install -r requirements.txt"
 ]
 
 [phases.start]
-command = "python kick_view.py"
+# Ejecutamos con el python del venv explícitamente
+command = "/opt/venv/bin/python kick_view.py"
 
 [env]
 PATH = "/opt/venv/bin:$PATH"
