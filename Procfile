@@ -1,1 +1,1 @@
-worker: python kick_view.py
+worker: /opt/venv/bin/python kick_view.py
