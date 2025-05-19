@@ -1,6 +1,7 @@
 import undetected_chromedriver as uc
 import time
 import sys
+import os
 
 KICK_URL = "https://kick.com/elshowdelast"
 
@@ -8,6 +9,10 @@ def view_bot(bot_id):
     print(f"🟢 Bot {bot_id} iniciando...", flush=True)
     options = uc.ChromeOptions()
     options.headless = True
+        # Carpeta temporal única para cada bot (evita conflictos)
+    temp_cache_dir = tempfile.mkdtemp(prefix=f"bot_{bot_id}_uc_")
+    os.environ["UNDTECTED_CHROMEDRIVER_CACHE_DIR"] = temp_cache_dir
+    
     driver = None
     try:
         driver = uc.Chrome(
