@@ -20,10 +20,14 @@ apt-get update && apt-get install -y \
   fonts-liberation \
   libu2f-udev
 
+
 echo "🌐 Descargando e instalando Google Chrome directamente..."
-curl -sSL -o chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-dpkg -i chrome.deb || apt-get install -f -y
-rm chrome.deb
+curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-linux-signing-keyring.gpg
+
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-linux-signing-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
+
+apt-get update
+apt-get install -y google-chrome-stable
 
 # Verificar ubicación de Google Chrome
 CHROME_BIN="/usr/bin/google-chrome"
