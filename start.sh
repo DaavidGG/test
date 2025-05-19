@@ -4,7 +4,7 @@ set -e
 
 echo "📦 Instalando dependencias necesarias..."
 apt-get update
-apt-get install -y wget unzip curl fonts-liberation libasound2 libnss3 libxss1 libxkbcommon0 libatk-bridge2.0-0 libgtk-3-0 libdrm2 libgbm1 libxshmfence1
+apt-get install -y wget unzip curl fonts-liberation libnss3 libxss1 libxkbcommon0 libatk-bridge2.0-0 libgtk-3-0 libdrm2 libgbm1 libxshmfence1
 
 echo "🌐 Instalando Google Chrome..."
 wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
