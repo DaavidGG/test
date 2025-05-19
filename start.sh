@@ -1,31 +1,23 @@
 #!/bin/bash
 
-set -e
-
 echo "📦 Instalando dependencias necesarias..."
 apt-get update
 apt-get install -y wget unzip curl fonts-liberation libnss3 libxss1 libxkbcommon0 libatk-bridge2.0-0 libgtk-3-0 libdrm2 libgbm1 libxshmfence1
 
 echo "🌐 Instalando Google Chrome..."
-wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-apt-get install -y ./google-chrome-stable_current_amd64.deb || apt-get install -fy
+curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-linux-signing-keyring.gpg
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-linux-signing-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
 
-CHROME_VERSION=$(google-chrome --version | grep -oP '[0-9.]+' | head -1)
-CHROME_MAJOR=$(echo $CHROME_VERSION | cut -d '.' -f 1)
+apt-get update
+apt-get install -y google-chrome-stable
+
+CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+')
 
 echo "🌐 Chrome versión instalada: $CHROME_VERSION"
 
 echo "🔧 Descargando ChromeDriver versión compatible..."
-LATEST=$(curl -s "https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json" \
-  | grep -B 2 "\"version\": \"$CHROME_VERSION\"" \
-  | grep "url" \
-  | grep "linux64/chromedriver-linux64.zip" \
-  | cut -d '"' -f 4)
-
-wget -q "$LATEST" -O chromedriver.zip
-unzip chromedriver.zip
-mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
-chmod +x /usr/local/bin/chromedriver
+CHROME_DRIVER_VERSION=$(wget -qO- https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION)
+echo "ChromeDriver versión: $CHROME_DRIVER_VERSION"
 
 echo "✅ ChromeDriver instalado correctamente."
 
