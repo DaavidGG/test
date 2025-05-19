@@ -30,4 +30,4 @@ pip install --upgrade pip
 pip install selenium
 
 # Ejecutar el script Python con BOT_ID o 1 por defecto
-python tu_script.py ${BOT_ID:-1}
+python kick_view.py ${BOT_ID:-1}
