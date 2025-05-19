@@ -7,7 +7,7 @@ on:
         description: 'Número de bots'
         required: true
         default: '20'
-        type: number
+        type: string
 jobs:
   generate-matrix:
     runs-on: ubuntu-latest
@@ -16,10 +16,10 @@ jobs:
     steps:
       - name: Generate matrix
         id: set-matrix
-        run:  |
-          count=${{ github.event.inputs.bots_count }}
-          bots=$(seq 1 $count | jq -R . | jq -s .)
-          echo "matrix={\"bot_id\": $bots}" >> $GITHUB_OUTPUT
+        run: |
+          count="${{ github.event.inputs.bots_count }}"
+          bots=$(seq 1 "$count" | jq -R . | jq -cs .)
+          echo "matrix={\"bot_id\":$bots}" >> "$GITHUB_OUTPUT"
 
   run-bots:
     needs: generate-matrix
