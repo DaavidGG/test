@@ -2,6 +2,8 @@ import undetected_chromedriver as uc
 import time
 import sys
 import os
+import tempfile
+
 
 KICK_URL = "https://kick.com/elshowdelast"
 
