@@ -4,7 +4,7 @@ set -e  # detener el script si algún comando falla
 
 echo "📦 Instalando dependencias necesarias..."
 apt-get update
-apt-get install -y wget unzip curl fonts-liberation libnss3 libxss1 libxkbcommon0 libatk-bridge2.0-0 libgtk-3-0 libdrm2 libgbm1 libxshmfence1
+apt-get install -y wget unzip curl gnupg fonts-liberation libnss3 libxss1 libxkbcommon0 libatk-bridge2.0-0 libgtk-3-0 libdrm2 libgbm1 libxshmfence1
 
 echo "🌐 Instalando Google Chrome..."
 curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-linux-signing-keyring.gpg
