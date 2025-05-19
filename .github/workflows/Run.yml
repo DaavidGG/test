@@ -27,7 +27,6 @@ jobs:
       - name: Setup Chrome 
         uses: nanasess/setup-chromedriver@v1
         with:
-          chrome-version: 136.0.0.0
           chromedriver-version: 114.0.5735.90
   
       - name: Set up Python 3.11.0
