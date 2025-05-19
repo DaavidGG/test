@@ -1,4 +1,4 @@
-mport undetected_chromedriver as uc
+import undetected_chromedriver as uc
 import time
 import sys
 import tempfile
