@@ -1,5 +1,9 @@
 [phases.setup]
-nixPkgs = ["python311", "python311Packages.pip"]
+nixPkgs = [
+  "python311",
+  "python311Packages.pip",
+  "python311Packages.distutils"  # <- Añadido aquí
+]
 
 [phases.install]
 commands = [
@@ -14,3 +18,4 @@ command = "python kick_view.py"
 
 [env]
 PATH = "/opt/venv/bin:$PATH"
+
