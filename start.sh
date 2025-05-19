@@ -1,23 +1,22 @@
 #!/bin/bash
 
-# Dar permisos por si no los tiene
-chmod +x start.sh
-
-# Actualizar e instalar dependencias para Chrome
 apt-get update
-apt-get install -y wget unzip fonts-liberation libappindicator3-1 libasound2 libatk-bridge2.0-0 libatk1.0-0 libcups2 libdbus-1-3 libgbm1 libnspr4 libnss3 libx11-xcb1 libxcomposite1 libxdamage1 libxrandr2 xdg-utils
+apt-get install -y wget unzip curl gnupg2 software-properties-common
 
-# Descargar e instalar Google Chrome estable
-wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-apt install -y ./google-chrome-stable_current_amd64.deb
+# Instalar Google Chrome
+curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-linux-signing-keyring.gpg
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-linux-signing-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
 
-# Obtener versión Chrome instalada para ChromeDriver
+apt-get update
+apt-get install -y google-chrome-stable
+
+# Obtener versión Chrome
 CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+')
-echo "Versión de Chrome instalada: $CHROME_VERSION"
+echo "Versión Chrome: $CHROME_VERSION"
 
-# Descargar versión compatible de ChromeDriver
+# Descargar ChromeDriver compatible
 CHROME_DRIVER_VERSION=$(wget -qO- https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION)
-echo "Versión de ChromeDriver compatible: $CHROME_DRIVER_VERSION"
+echo "ChromeDriver versión: $CHROME_DRIVER_VERSION"
 
 wget -q "https://chromedriver.storage.googleapis.com/${CHROME_DRIVER_VERSION}/chromedriver_linux64.zip"
 unzip chromedriver_linux64.zip
@@ -25,7 +24,7 @@ mv chromedriver /usr/local/bin/chromedriver
 chmod +x /usr/local/bin/chromedriver
 rm chromedriver_linux64.zip
 
-# Instalar selenium
+# Instalar Python selenium
 pip install --upgrade pip
 pip install selenium
 
