@@ -8,11 +8,12 @@ def view_bot(bot_id):
     print(f"🟢 Bot {bot_id} iniciando...", flush=True)
     options = uc.ChromeOptions()
     options.headless = True
-    options.binary_location = "/usr/bin/google-chrome"  # 👈 Añade esta línea
-
     driver = None
     try:
-        driver = uc.Chrome(options=options)
+        driver = uc.Chrome(
+            options=options,
+            browser_executable_path="/usr/bin/google-chrome"  # 👈 Importante
+        )
         driver.get(KICK_URL)
         print(f"✅ Bot {bot_id} viendo {KICK_URL}", flush=True)
         time.sleep(120)
