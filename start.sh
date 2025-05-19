@@ -1,15 +1,13 @@
 #!/bin/bash
-
 set -e
 
-echo "📦 Instalando herramientas necesarias..."
+echo "📦 Instalando dependencias del sistema..."
 apt-get update && apt-get install -y \
-  wget \
   curl \
   unzip \
   gnupg \
   ca-certificates \
-  fonts-liberation \
+  python3-pip \
   libnss3 \
   libxss1 \
   libxkbcommon0 \
@@ -19,36 +17,25 @@ apt-get update && apt-get install -y \
   libgbm1 \
   libxshmfence1 \
   libasound2t64 \
-  python3-pip
+  fonts-liberation \
+  libu2f-udev
 
-echo "🌐 Descargando Google Chrome..."
-wget -O google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-
-echo "💾 Instalando Google Chrome..."
-apt install -y ./google-chrome.deb || apt --fix-broken install -y
-
-# Verifica si Chrome quedó instalado
-if ! command -v google-chrome > /dev/null; then
-  echo "❌ Google Chrome no se instaló correctamente."
-  exit 1
-fi
+echo "🌐 Descargando e instalando Google Chrome directamente..."
+curl -sSL -o chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+apt-get install -y ./chrome.deb || apt --fix-broken install -y
+rm chrome.deb
 
 echo "🌍 Chrome instalado: $(google-chrome --version)"
 
-# Instalar ChromeDriver correspondiente
+echo "⬇️ Instalando ChromeDriver correspondiente..."
 CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+')
-CHROMEDRIVER_VERSION=$(wget -qO- https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION)
-
-echo "⬇️ Descargando ChromeDriver $CHROMEDRIVER_VERSION..."
-wget -O chromedriver.zip https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip
+CHROMEDRIVER_VERSION=$(curl -sS "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
+curl -sS -o chromedriver.zip https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip
 unzip chromedriver.zip
-mv chromedriver /usr/local/bin/chromedriver
-chmod +x /usr/local/bin/chromedriver
-rm chromedriver.zip google-chrome.deb
+install -m 755 chromedriver /usr/local/bin/chromedriver
+rm chromedriver.zip chromedriver
 
-echo "✅ ChromeDriver instalado."
-
-echo "🐍 Instalando dependencias de Python..."
+echo "🐍 Instalando dependencias Python..."
 pip3 install -U pip selenium
 
 echo "🚀 Iniciando bots..."
