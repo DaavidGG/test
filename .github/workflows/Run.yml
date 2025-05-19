@@ -8,15 +8,26 @@ on:
         required: true
         default: '20'
         type: number
-
 jobs:
+  generate-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Generate matrix
+        id: set-matrix
+        run:  |
+          count=${{ github.event.inputs.bots_count }}
+          bots=$(seq 1 $count | jq -R . | jq -s .)
+          echo "matrix={\"bot_id\": $bots}" >> $GITHUB_OUTPUT
+
   run-bots:
+    needs: generate-matrix
     name: Bot ${{ matrix.bot_id }}
     runs-on: ubuntu-22.04
     timeout-minutes: 45
     strategy:
-      matrix:
-        bot_id: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+      matrix: ${{fromJson(needs.generate-matrix.outputs.matrix)}}
       max-parallel: 5
       fail-fast: false
 
